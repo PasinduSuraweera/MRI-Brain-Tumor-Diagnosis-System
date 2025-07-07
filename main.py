@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, send_from_directory
 from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
+import tensorflow.keras.preprocessing.image
 import numpy as np
 import os
 
@@ -23,8 +23,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Helper function to predict tumor type
 def predict_tumor(image_path):
     IMAGE_SIZE = 128
-    img = load_img(image_path, target_size=(IMAGE_SIZE, IMAGE_SIZE))
-    img_array = img_to_array(img) / 255.0  # Normalize pixel values
+    img = tensorflow.keras.preprocessing.image.load_img(image_path, target_size=(IMAGE_SIZE, IMAGE_SIZE))
+    img_array = tensorflow.keras.preprocessing.image.img_to_array(img) / 255.0  # Normalize pixel values
     img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
 
     predictions = model.predict(img_array)
