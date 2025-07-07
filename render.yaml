@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: MRI-brain-tumor-app
+    name: MRI-Brain-Tumor-Diagnosis-System
     env: python
     plan: free
     buildCommand: "pip install -r requirements.txt"
