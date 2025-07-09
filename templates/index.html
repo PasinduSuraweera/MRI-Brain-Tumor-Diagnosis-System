@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>MRI Tumor Diagnosis System</title>
+    <title>Brain Tumor Diagnosis</title>
     <style>
         :root {
             --primary-color: #3b82f6;
@@ -15,6 +15,7 @@
             --border-color: #334155;
             --shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
             --shadow-hover: 0 15px 30px rgba(0, 0, 0, 0.4);
+            --dropzone-highlight: rgba(59, 130, 246, 0.1);
         }
 
         * {
@@ -97,7 +98,7 @@
         .form-control:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
         }
 
         .btn-primary {
@@ -118,6 +119,12 @@
             transform: scale(1.02);
         }
 
+        .btn-primary:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .result-card {
             background: #172135;
             border: 1px solid var(--border-color);
@@ -132,6 +139,11 @@
             font-weight: 600;
             color: #34d399;
             margin-bottom: 0.5rem;
+        }
+        .dropzone.dragover {
+            border-color: var(--primary-color);
+            background: var(--dropzone-highlight);
+            transform: scale(1.01);
         }
 
         .result-card p {
@@ -172,17 +184,102 @@
         }
 
         .example-image {
-        max-height: 200px;
-        width: auto;
-        object-fit: contain;
-        border-radius: 0.5rem;
-        border: 1px solid var(--border-color);
-        margin-top: 0.5rem;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
+            max-height: 200px;
+            width: auto;
+            object-fit: contain;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            margin-top: 0.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
 
+        .dropzone {
+            border: 2px dashed var(--border-color);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            text-align: center;
+            background: var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .dropzone.dragover {
+            border-color: var(--primary-color);
+            background: var(--dropzone-highlight);
+            transform: scale(1.01);
+        }
+
+        .dropzone p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dropzone .icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .file-preview {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #172135;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .file-preview img {
+            max-width: 80px;
+            max-height: 80px;
+            object-fit: contain;
+            border-radius: 0.25rem;
+        }
+
+        .file-preview p {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            flex: 1;
+        }
+
+        .file-preview .remove-file {
+            color: #f87171;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .file-preview .remove-file:hover {
+            color: #dc2626;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #475569;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .progress-bar.active {
+            display: block;
+        }
+
+        .progress-bar div {
+            height: 100%;
+            background: var(--primary-color);
+            width: 0;
+            transition: width 0.3s ease;
+        }
 
         @media (max-width: 640px) {
             .header h1 {
@@ -196,40 +293,54 @@
             .card {
                 padding: 1.5rem;
             }
+
+            .dropzone {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>MRI Brain Tumor Diagnosis</h1>
-            <p>Submit an MRI scan to enable precise classification and comprehensive tumor analysis</p>
+            <h1>Brain Tumor Diagnosis System</h1>
+            <p>Upload an MRI scan for accurate brain tumor classification and detailed analysis using a Convolutional Neural Network (CNN)</p>
         </div>
 
         <!-- File Upload Form -->
         <div class="card">
-            <form method="POST" enctype="multipart/form-data">
+            <form id="upload-form" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="file" class="form-label">Select MRI Image</label>
-                    <input type="file" class="form-control" id="file" name="file" accept="image/*" required>
+                    <div class="dropzone" id="dropzone">
+                        <div class="icon">📤</div>
+                        <p>Drag & Drop your MRI image here or click to select</p>
+                        <input type="file" class="form-control" id="file" name="file" accept="image/*" required style="display: none;">
+                    </div>
+                    <div class="file-preview" id="file-preview" style="display: none;">
+                        <img id="preview-image" src="" alt="File Preview">
+                        <p id="file-name"></p>
+                        <span class="remove-file" id="remove-file">Remove</span>
+                    </div>
+                    <div class="progress-bar" id="progress-bar">
+                        <div id="progress"></div>
+                    </div>
                 </div>
-                <button type="submit" class="btn-primary">Upload & Analyze</button>
+                <button type="submit" class="btn-primary" id="submit-btn" disabled>Upload & Analyze</button>
             </form>
 
             <div class="note">
-                ⚠️ This system is not 100% accurate and should not be used for official diagnosis. It is trained on the following four types: <strong>glioma</strong>, <strong>meningioma</strong>, <strong>pituitary</strong>, and having<strong> no tumor</strong>.
+                ⚠️ This system is not 100% accurate and should not be used for official diagnosis. It is trained on the following four types: <strong>glioma</strong>, <strong>meningioma</strong>, <strong>pituitary</strong>, and having <strong>no tumor</strong>.
             </div>
 
             <div class="dataset-link">
                 Dataset Source: <a href="https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset" target="_blank">Kaggle - Brain Tumor MRI Dataset</a>
             </div>
 
-            <!-- Inside your .card div -->
             <div class="form-group">
                 <label class="form-label" style="margin-top:1.5rem;">Example MRI Image (for reference)</label>
                 <img src="https://eyewiki.org/w/images/e/ed/PituitaryAdenoma.JPG" alt="Example MRI" class="example-image">
             </div>
-
         </div>
 
         {% if result %}
@@ -241,5 +352,83 @@
         </div>
         {% endif %}
     </div>
+
+    <script>
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('file');
+        const filePreview = document.getElementById('file-preview');
+        const previewImage = document.getElementById('preview-image');
+        const fileName = document.getElementById('file-name');
+        const removeFile = document.getElementById('remove-file');
+        const submitBtn = document.getElementById('submit-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progress = document.getElementById('progress');
+        const uploadForm = document.getElementById('upload-form');
+
+        // Handle file selection (via click or drag-and-drop)
+        function handleFileSelect(e) {
+            const file = e.target.files[0] || e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                fileName.textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImage.src = e.target.result;
+                    filePreview.style.display = 'flex';
+                    submitBtn.disabled = false;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                resetFileInput();
+            }
+        }
+
+        // Reset file input and UI
+        function resetFileInput() {
+            fileInput.value = '';
+            filePreview.style.display = 'none';
+            submitBtn.disabled = true;
+            progressBar.classList.remove('active');
+            progress.style.width = '0%';
+        }
+
+        // Drag-and-drop events
+        dropzone.addEventListener('click', () => fileInput.click());
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+        });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
+            handleFileSelect(e);
+        });
+
+        // File input change event
+        fileInput.addEventListener('change', handleFileSelect);
+
+        // Remove file
+        removeFile.addEventListener('click', resetFileInput);
+
+        // Form submission with progress simulation
+        uploadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            progressBar.classList.add('active');
+            let width = 0;
+            const interval = setInterval(() => {
+                width += 10;
+                progress.style.width = `${width}%`;
+                if (width >= 100) {
+                    clearInterval(interval);
+                    // Actual form submission to backend
+                    uploadForm.submit();
+                }
+            }, 200);
+        });
+    </script>
 </body>
 </html>
