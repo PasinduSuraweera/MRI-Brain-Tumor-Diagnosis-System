@@ -12,7 +12,7 @@
 
 [![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Render-46E3B7?style=for-the-badge)](https://mri-brain-tumor-diagnosis-system.onrender.com/)
 
-[Features](#-key-features) • [Tech Stack](#-tech-stack--libraries) • [Installation](#️-installation) • [Usage](#-usage) • [Deployment](#️-deployment) • [Results](#-results)
+[Features](#-key-features) • [Tech Stack](#-tech-stack--libraries) • [Installation](#️-installation) • [Usage](#-usage) • [Deployment](#️-deployment)
 
 ---
 
@@ -26,22 +26,22 @@ Leveraging Python and TensorFlow, this system aims to deliver reliable, interpre
 
 ## 🚀 Key Features
 
-### 🧬 **Transfer Learning with VGG16**
+🧬 **Transfer Learning with VGG16**
 Leveraging the pre-trained VGG16 convolutional base, freezing most layers to retain powerful learned features, while fine-tuning the top layers to specialize the model for brain tumor MRI classification.
 
-### 🖼️ **Custom Image Augmentation**
+🖼️ **Custom Image Augmentation**
 To maximize model robustness despite a limited dataset, brightness and contrast adjustments are applied on-the-fly during training, improving the model's ability to generalize.
 
-### 🔢 **Dynamic Data Loading & Label Encoding**
+🔢 **Dynamic Data Loading & Label Encoding**
 Images are efficiently loaded from organized folder structures, shuffled, and labels encoded dynamically for seamless batch training.
 
-### ⚙️ **Tailored Model Architecture**
+⚙️ **Tailored Model Architecture**
 The core model stacks the VGG16 base (excluding its classification head) with flattening, dropout layers, and fully connected dense layers topped with softmax for multi-class tumor prediction.
 
-### 📈 **Thorough Training and Evaluation**
+📈 **Thorough Training and Evaluation**
 Training uses the Adam optimizer and sparse categorical cross-entropy loss. The system monitors accuracy and loss trends and validates model performance via detailed classification reports, confusion matrices, and ROC/AUC analyses.
 
-### 💾 **Model Persistence & Practical Inference**
+💾 **Model Persistence & Practical Inference**
 After training, the model is saved (`model.h5`) and can predict tumor type and confidence on new MRI images through an easy-to-use inference function.
 
 ## 🧰 Tech Stack & Libraries
@@ -107,38 +107,38 @@ Input MRI Image (224x224x3)
 
 ## 🛠️ Development Workflow
 
-### 1️⃣ **Data Preparation**
+1️⃣ **Data Preparation**
 - Loaded MRI images from well-structured training and testing folders
 - Shuffled datasets and encoded labels dynamically
 - Applied brightness and contrast augmentations in real-time during training to boost robustness
 
-### 2️⃣ **Model Setup**
+2️⃣ **Model Setup**
 - Initialized VGG16 pretrained on ImageNet without its top layers
 - Froze most layers to preserve pretrained features; unfroze several top layers for targeted fine-tuning
 - Added custom classification layers with dropout and dense connections
 
-### 3️⃣ **Training**
+3️⃣ **Training**
 - Used a custom data generator for efficient batch processing
 - Trained the model over multiple epochs with the Adam optimizer
 - Tracked and visualized accuracy and loss metrics throughout the training cycle
 
-### 4️⃣ **Evaluation**
+4️⃣ **Evaluation**
 - Assessed model performance with classification reports and confusion matrices on test data
 - Visualized results through heatmaps and ROC/AUC curves for detailed understanding
 
-### 5️⃣ **Inference**
+5️⃣ **Inference**
 - Preprocessed new MRI images and ran predictions with confidence scoring
 - Presented results alongside input images for interpretability
 
 ## 🖥️ Installation
 
-### Prerequisites
+Prerequisites
 - Python 3.8 or higher
 - pip package manager
 - Jupyter Notebook
 - (Optional) Virtual environment
 
-### Setup
+Setup
 
 1. **Clone the repository**
 ```bash
@@ -182,7 +182,7 @@ gunicorn>=20.1.0
 
 ## 🚀 Usage
 
-### Training the Model
+Training the Model
 
 1. Open the training notebook in Jupyter
 2. Organize your dataset in the following structure:
@@ -202,7 +202,7 @@ data/
 3. Run the cells sequentially to train the model
 4. Model checkpoints will be saved as `model.h5`
 
-### Making Predictions
+Making Predictions
 
 **In Jupyter Notebook:**
 ```python
@@ -238,16 +238,16 @@ predict_tumor('path/to/mri_scan.jpg')
 
 The system is deployed on **Render** to provide seamless web access. The backend is built using **Flask**, serving the model and handling image uploads smoothly. 
 
-### 🌐 **Live Demo**
+🌐 **Live Demo**
 Explore the live application here:
 
 <div align="center">
 
-### **[https://mri-brain-tumor-diagnosis-system.onrender.com/](https://mri-brain-tumor-diagnosis-system.onrender.com/)**
+**[https://mri-brain-tumor-diagnosis-system.onrender.com/](https://mri-brain-tumor-diagnosis-system.onrender.com/)**
 
 </div>
 
-### Deploying Your Own Instance
+Deploying Your Own Instance
 
 1. **Create a Flask Application** (`app.py`)
 2. **Configure `requirements.txt`** with all dependencies
@@ -259,26 +259,6 @@ web: gunicorn app:app
    - Connect your GitHub repository
    - Configure build settings
    - Deploy automatically on push
-
-## 📊 Results
-
-The model demonstrates promising performance across all tumor categories:
-
-| Metric | Performance |
-|--------|-------------|
-| Overall Accuracy | ~XX.X% |
-| Glioma Detection | ~XX.X% |
-| Meningioma Detection | ~XX.X% |
-| Pituitary Detection | ~XX.X% |
-| No Tumor Detection | ~XX.X% |
-
-### Evaluation Metrics
-- ✅ **Classification Report**: Precision, Recall, F1-Score per class
-- ✅ **Confusion Matrix**: Visual representation of prediction accuracy
-- ✅ **ROC/AUC Curves**: Model discrimination capability analysis
-- ✅ **Loss/Accuracy Plots**: Training progression visualization
-
-*Note: Update with your actual model performance metrics after training*
 
 ## 📁 Project Structure
 
@@ -319,7 +299,7 @@ This project works with MRI brain scan datasets organized into four categories:
 - **Pituitary** - A tumor in the pituitary gland
 - **No Tumor** - Healthy brain scans
 
-### Recommended Datasets:
+Recommended Datasets:
 - [Brain Tumor MRI Dataset (Kaggle)](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset)
 - [Brain MRI Images for Tumor Detection (Kaggle)](https://www.kaggle.com/datasets/navoneel/brain-mri-images-for-brain-tumor-detection)
 
@@ -339,7 +319,7 @@ This MRI Brain Tumor Diagnosis System showcases how **transfer learning with VGG
 
 This project lays a solid foundation for future AI-driven diagnostic applications and underscores deep learning's potential to empower healthcare professionals with faster, more informed decision-making.
 
-### 🔮 Future Directions
+🔮 Future Directions
 - 📈 Expanding the dataset with more diverse MRI scans
 - 🏥 Including additional tumor classes and subtypes
 - 🔬 Implementing explainable AI techniques (Grad-CAM, attention maps)
@@ -351,7 +331,7 @@ This project lays a solid foundation for future AI-driven diagnostic application
 
 Contributions are welcome! Whether it's bug fixes, feature additions, or documentation improvements, your help is appreciated.
 
-### How to Contribute:
+How to Contribute:
 
 1. Fork the project
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
@@ -386,9 +366,9 @@ For questions, feedback, or collaboration opportunities, please open an issue in
 
 <div align="center">
 
-### ⭐ **If you find this project helpful, please consider giving it a star!** ⭐
+⭐ **If you find this project helpful, please consider giving it a star!** ⭐
 
-**Made with ❤️ and 🧠 for advancing healthcare AI**
+**Made for advancing healthcare AI**
 
 ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=PasinduSuraweera.MRI-Brain-Tumor-Diagnosis-System)
 
